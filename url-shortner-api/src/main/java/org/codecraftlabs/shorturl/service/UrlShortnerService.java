@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +29,8 @@ public class UrlShortnerService {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping(value = "/url/{shortenedUrl}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getdUrl(@PathVariable String shortenedUrl) {
+    @GetMapping(value = "/url/{shortenedUrl}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getUrl(@PathVariable String shortenedUrl) {
         return ResponseEntity.ok("test");
     }
 
