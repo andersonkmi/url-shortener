@@ -1,2 +1,2 @@
 rootProject.name = 'url-shortner'
-include 'url-shortner-api', 'url-shortner-job', 'url-shortner-db'
+include 'url-shortner-api', 'url-shortner-db'
