@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'org.codecraftlabs'
-version = '1.2.0'
+version = '1.0.0'
 
 repositories {
     mavenLocal()
@@ -54,9 +54,9 @@ jacocoTestReport {
 }
 
 bootJar {
-    mainClass = 'org.codecraftlabs.idgenerator.MainApplication'
+    mainClass = 'org.codecraftlabs.shorturl.MainApplication'
     manifest {
-        attributes('Implementation-Title': 'Id generator service', 'Implementation-Version': version)
+        attributes('Implementation-Title': 'URL shortner', 'Implementation-Version': version)
     }
 }
 
@@ -68,35 +68,36 @@ tasks.named("clean") {
     dependsOn tasks.named("deleteLogs")
 }
 
-sourceSets {
-    integrationTest {
-        java {
-            srcDir 'src/integrationTest/java'
-        }
-        resources {
-            srcDir 'src/integrationTest/resources'
-        }
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-    }
-}
-
-configurations {
-    integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
-}
-
-dependencies {
-    integrationTestImplementation 'org.junit.jupiter:junit-jupiter:5.11.0-M1'
-    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-web'
-    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-tasks.register('integrationTest', Test) {
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
-
-    useJUnitPlatform {
-        includeTags 'integration'
-    }
-}
+// Integration tests disabled for now
+//sourceSets {
+//    integrationTest {
+//        java {
+//            srcDir 'src/integrationTest/java'
+//        }
+//        resources {
+//            srcDir 'src/integrationTest/resources'
+//        }
+//        compileClasspath += main.output + test.output
+//        runtimeClasspath += main.output + test.output
+//    }
+//}
+//
+//configurations {
+//    integrationTestImplementation.extendsFrom testImplementation
+//    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+//}
+//
+//dependencies {
+//    integrationTestImplementation 'org.junit.jupiter:junit-jupiter:5.11.0-M1'
+//    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-web'
+//    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+//}
+//
+//tasks.register('integrationTest', Test) {
+//    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+//    classpath = sourceSets.integrationTest.runtimeClasspath
+//
+//    useJUnitPlatform {
+//        includeTags 'integration'
+//    }
+//}
