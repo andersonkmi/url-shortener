@@ -1,4 +1,4 @@
-package org.codecraftlabs.shorturl.service;
+package org.codecraftlabs.shorturl.api;
 
 public class URLResponse {
     private String url;
