@@ -1,4 +1,4 @@
-package org.codecraftlabs.shorturl.service;
+package org.codecraftlabs.shorturl.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

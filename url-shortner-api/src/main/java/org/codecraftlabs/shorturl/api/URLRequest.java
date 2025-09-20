@@ -1,4 +1,4 @@
-package org.codecraftlabs.shorturl.service;
+package org.codecraftlabs.shorturl.api;
 
 public class URLRequest {
     private String url;
