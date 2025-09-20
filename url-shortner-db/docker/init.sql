@@ -1,7 +1,5 @@
-CREATE SEQUENCE urlid_seq;
-
 CREATE TABLE url (
-    urlid bigint not null primary key default nextval('urlid_seq'),
+    url_id bigint not null primary key,
     url varchar not null unique,
     short_url varchar not null
 );
