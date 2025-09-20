@@ -4,6 +4,4 @@ CREATE TABLE url (
     short_url varchar not null
 );
 
-CREATE SEQUENCE url_id_sequence
-CACHE 1000
-;
+CREATE SEQUENCE url_id_sequence;
