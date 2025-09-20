@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Nonnull;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,9 +48,12 @@ public class UrlShortnerRestController {
         }
     }
 
-    @GetMapping(value = "/url/{shortenedUrl}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/url/{shortenedUrl}")
     public ResponseEntity<String> getUrl(@PathVariable String shortenedUrl) {
-        return ResponseEntity.ok("test");
+        var originalUrl = this.urlShortnerService.getOriginalUrl(shortenedUrl);
+        return originalUrl.
+                <ResponseEntity<String>>map(s -> ResponseEntity.status(HttpStatus.FOUND).location(URI.create(s)).build())
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

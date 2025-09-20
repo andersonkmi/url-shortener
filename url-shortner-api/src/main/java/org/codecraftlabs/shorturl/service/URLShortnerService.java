@@ -1,11 +1,13 @@
 package org.codecraftlabs.shorturl.service;
 
 import org.codecraftlabs.shorturl.service.repository.DatabaseException;
+import org.codecraftlabs.shorturl.service.repository.ShortenedURL;
 import org.codecraftlabs.shorturl.service.repository.URLShortnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 @Service
 public class URLShortnerService {
@@ -37,5 +39,12 @@ public class URLShortnerService {
         } catch (DatabaseException exception) {
             throw new URLShorteningException("Fail to generate short URL", exception);
         }
+    }
+
+    @Nonnull
+    public Optional<String> getOriginalUrl(@Nonnull String shortUrl) {
+        // Check if the URL is already shortened.
+        var item = urlShortnerRepository.findOriginalUrl(shortUrl);
+        return item.map(ShortenedURL::url);
     }
 }

@@ -51,4 +51,15 @@ public class URLShortnerRepository {
             throw new DatabaseException("Failed to insert new URL", exception);
         }
     }
+
+    @Nonnull
+    public Optional<ShortenedURL> findOriginalUrl(@Nonnull String shortUrl) {
+        try {
+            String query = "select url_id, url, short_url from url where short_url = ?";
+            ShortenedURL item = jdbcTemplate.queryForObject(query, new ShortenedURLRowMapper(), shortUrl);
+            return Optional.ofNullable(item);
+        } catch (DataAccessException exception) {
+            return Optional.empty();
+        }
+    }
 }
