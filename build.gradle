@@ -1,0 +1,10 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+
+tasks.register('deleteLogs', Delete) {
+    delete fileTree("${projectDir}/logs")
+}

@@ -1,5 +1,7 @@
 package org.codecraftlabs.shorturl.api;
 
+import org.codecraftlabs.shorturl.service.URLShortnerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +16,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/url-shortner/v1")
 public class UrlShortnerRestController {
+    private final URLShortnerService urlShortnerService;
+
+    @Autowired
+    public UrlShortnerRestController(@Nonnull URLShortnerService urlShortnerService) {
+        this.urlShortnerService = urlShortnerService;
+    }
 
     @PostMapping(value = "/url", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<URLResponse> createShortenedUrl(@RequestBody URLRequest urlRequest) {
+        String shortUrl = urlShortnerService.generateShortUrl(urlRequest.getUrl());
         URLResponse response = new URLResponse();
         response.setUrl(urlRequest.getUrl());
-        response.setShortUrl("short here");
+        response.setShortUrl(shortUrl);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
