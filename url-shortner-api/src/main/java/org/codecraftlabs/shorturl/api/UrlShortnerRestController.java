@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/url-shortner/v1")
-public class UrlShortnerService {
+public class UrlShortnerRestController {
 
     @PostMapping(value = "/url", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<URLResponse> createShortenedUrl(@RequestBody URLRequest urlRequest) {
