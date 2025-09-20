@@ -60,12 +60,12 @@ bootJar {
     }
 }
 
-tasks.register('deleteLogs', Delete) {
+tasks.register('purgeLogs', Delete) {
     delete fileTree("${projectDir}/logs")
 }
 
 tasks.named("clean") {
-    dependsOn tasks.named("deleteLogs")
+    dependsOn tasks.named("purgeLogs")
 }
 
 // Integration tests disabled for now
