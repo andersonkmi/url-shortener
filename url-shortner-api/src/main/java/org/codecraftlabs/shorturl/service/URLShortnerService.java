@@ -3,6 +3,8 @@ package org.codecraftlabs.shorturl.service;
 import org.codecraftlabs.shorturl.service.repository.DatabaseException;
 import org.codecraftlabs.shorturl.service.repository.ShortenedURL;
 import org.codecraftlabs.shorturl.service.repository.URLShortnerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class URLShortnerService {
+    private static final Logger logger = LoggerFactory.getLogger(URLShortnerService.class);
     private final URLShortnerRepository urlShortnerRepository;
 
     @Autowired
@@ -24,6 +27,7 @@ public class URLShortnerService {
             // Check if the URL is already shortened.
             var shortUrl = urlShortnerRepository.findShortenedUrl(originalUrl);
             if (shortUrl.isPresent()) {
+                logger.info("URL already shortened. Returning existing item");
                 return shortUrl.get().shortUrl();
             }
 
@@ -34,9 +38,9 @@ public class URLShortnerService {
 
             // Saves the generated URL
             urlShortnerRepository.saveShortUrl(urlId, originalUrl, convertedValue);
-
             return convertedValue;
         } catch (DatabaseException exception) {
+            logger.error("Failed to generate a new short URL", exception);
             throw new URLShorteningException("Fail to generate short URL", exception);
         }
     }

@@ -1,5 +1,7 @@
 package org.codecraftlabs.shorturl.service.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +13,8 @@ import java.util.Optional;
 
 @Repository
 public class URLShortnerRepository {
+    private static final Logger logger = LoggerFactory.getLogger(URLShortnerRepository.class);
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -38,6 +42,7 @@ public class URLShortnerRepository {
             ShortenedURL item = jdbcTemplate.queryForObject(query, new ShortenedURLRowMapper(), url);
             return Optional.ofNullable(item);
         } catch (DataAccessException exception) {
+            logger.error("Fail to retrieve an existing shortened URL for {}", url, exception);
             return Optional.empty();
         }
     }
@@ -59,6 +64,7 @@ public class URLShortnerRepository {
             ShortenedURL item = jdbcTemplate.queryForObject(query, new ShortenedURLRowMapper(), shortUrl);
             return Optional.ofNullable(item);
         } catch (DataAccessException exception) {
+            logger.error("Fail to retrieve the original URL for {}", shortUrl, exception);
             return Optional.empty();
         }
     }
