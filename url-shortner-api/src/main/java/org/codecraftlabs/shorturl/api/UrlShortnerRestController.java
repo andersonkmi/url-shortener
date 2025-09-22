@@ -58,6 +58,7 @@ public class UrlShortnerRestController {
 
     @GetMapping(value = "/url/{shortenedUrl}")
     public ResponseEntity<String> getUrl(@PathVariable String shortenedUrl) {
+        logger.info("Returning original URL for {}", shortenedUrl);
         var originalUrl = this.urlShortnerService.getOriginalUrl(shortenedUrl);
         return originalUrl.
                 <ResponseEntity<String>>map(s -> ResponseEntity.status(HttpStatus.FOUND).location(URI.create(s)).build())
