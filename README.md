@@ -42,7 +42,7 @@ For local development purposes, it is possible to setup a Docker container:
 
 - Run the following docker command to create the database image:
   ```
-     docker image build -t codecraftlabs/url-shortner-db:1.0.0 .
+     docker image build -t codecraftlabs/url-shortner-db:1.0.0 ./url-shortner-db/docker
   ```
 
 - Create the container with the previously created image:
