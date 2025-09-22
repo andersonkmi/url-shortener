@@ -19,6 +19,7 @@ A lightweight and efficient URL Shortener toy project built on maven using Java 
 - Gradle
 - PostgreSQL
 - JDBC
+- Docker
 
 ## Database Setup 🗄️
 
@@ -37,6 +38,18 @@ This project uses PostgreSQL. Follow these steps to set it up:
   ```
 - Ensure PostgreSQL is running on localhost:5432 before starting the application.
 
+For local development purposes, it is possible to setup a Docker container:
+
+- Run the following docker command to create the database image:
+  ```
+     docker image build -t codecraftlabs/url-shortner-db:1.0.0 .
+  ```
+
+- Create the container with the previously created image:
+  ```
+     docker container run --detach --name url-shortner-db --publish 5432:5432 codecraftlabs/url-shortner-db:1.0.0
+  ```  
+
 ## Installation 💻
 
 - Clone the repository:
@@ -54,14 +67,14 @@ This project uses PostgreSQL. Follow these steps to set it up:
       ./gradlew bootRun    # On Linux/macOS
        gradlew.bat bootRun  # On Windows
    ```
-- Server will start at http://localhost:8080.
+- Server will start at http://localhost:27001.
 
 ## API Endpoints 🧭
 
-## Endpoint	                            | Method	   |   Description
-|---------------------------------------|------------|-----------------------------------------------------------------
-  /url-shortner/v1/url	                | POST	     |    Create a shortened URL from a long URL (send JSON in the body)
- /url-shortner/v1/url/{shortenedUrl} 	  | GET	       |     Redirect to the original URL using the short URL
+| Endpoint	                             | Method	 | Description                                                    |
+|---------------------------------------|---------|----------------------------------------------------------------|
+| /url-shortner/v1/url	                 | POST	   | Create a shortened URL from a long URL (send JSON in the body) |
+| /url-shortner/v1/url/{shortenedUrl} 	 | GET	    | Redirect to the original URL using the short URL               |
 
 ## Contributing 🤝
 
