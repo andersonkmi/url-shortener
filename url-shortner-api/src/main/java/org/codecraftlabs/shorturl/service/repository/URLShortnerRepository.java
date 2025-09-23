@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,9 @@ public class URLShortnerRepository {
             String query = "select url_id, url, short_url from url where url = ?";
             ShortenedURL item = jdbcTemplate.queryForObject(query, new ShortenedURLRowMapper(), url);
             return Optional.ofNullable(item);
+        } catch (EmptyResultDataAccessException exception) {
+            logger.warn("No shortened URL found for '{}'", url);
+            return Optional.empty();
         } catch (DataAccessException exception) {
             logger.error("Fail to retrieve an existing shortened URL for {}", url, exception);
             return Optional.empty();
