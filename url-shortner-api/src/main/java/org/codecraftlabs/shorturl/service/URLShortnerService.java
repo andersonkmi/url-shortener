@@ -2,6 +2,7 @@ package org.codecraftlabs.shorturl.service;
 
 import org.codecraftlabs.shorturl.service.repository.DatabaseException;
 import org.codecraftlabs.shorturl.service.repository.ShortenedURL;
+import org.codecraftlabs.shorturl.service.repository.ShortnerURLCachingRepository;
 import org.codecraftlabs.shorturl.service.repository.URLShortnerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class URLShortnerService {
     private static final Logger logger = LoggerFactory.getLogger(URLShortnerService.class);
     private final URLShortnerRepository urlShortnerRepository;
+    private final ShortnerURLCachingRepository shortnerURLCachingRepository;
 
     @Autowired
-    public URLShortnerService(@Nonnull URLShortnerRepository urlShortnerRepository) {
+    public URLShortnerService(@Nonnull URLShortnerRepository urlShortnerRepository, @Nonnull ShortnerURLCachingRepository shortnerURLCachingRepository) {
         this.urlShortnerRepository = urlShortnerRepository;
+        this.shortnerURLCachingRepository = shortnerURLCachingRepository;
     }
 
     @Nonnull
@@ -38,6 +41,10 @@ public class URLShortnerService {
 
             // Saves the generated URL
             urlShortnerRepository.saveShortUrl(urlId, originalUrl, convertedValue);
+
+            // Saves into the cache
+            shortnerURLCachingRepository.setValue(originalUrl, convertedValue);
+
             return convertedValue;
         } catch (DatabaseException exception) {
             logger.error("Failed to generate a new short URL", exception);
