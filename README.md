@@ -19,7 +19,8 @@ A lightweight and efficient URL Shortener toy project built on maven using Java 
 - Gradle
 - PostgreSQL
 - JDBC
-- Docker
+- Redis
+- Docker (for local development purposes)
 
 ## Database Setup 🗄️
 
@@ -49,6 +50,14 @@ For local development purposes, it is possible to setup a Docker container:
   ```
      docker container run --detach --name url-shortner-db --publish 5432:5432 codecraftlabs/url-shortner-db:1.0.0
   ```  
+
+## Redis setup
+
+- In order to setup Redis locally, run the following command:
+  ```
+     docker run -d --name redis-container -p 6379:6379 -p 8001:8001 -v redis-data:/data redis/redis-stack:7.4.0-v6
+  ```
+
 
 ## Installation 💻
 
