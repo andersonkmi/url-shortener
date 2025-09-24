@@ -1,7 +1,6 @@
 package org.codecraftlabs.shorturl.service;
 
 import org.codecraftlabs.shorturl.service.repository.DatabaseException;
-import org.codecraftlabs.shorturl.service.repository.ShortenedURL;
 import org.codecraftlabs.shorturl.service.repository.URLShortnerCachingRepository;
 import org.codecraftlabs.shorturl.service.repository.URLShortnerRepository;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class URLShortnerService {
             urlShortnerRepository.saveShortUrl(urlId, originalUrl, convertedValue);
 
             // Saves into the cache
-            urlShortnerCachingRepository.setValue(originalUrl, convertedValue);
+            urlShortnerCachingRepository.setValue(convertedValue, originalUrl);
 
             return convertedValue;
         } catch (DatabaseException exception) {
@@ -55,7 +54,6 @@ public class URLShortnerService {
     @Nonnull
     public Optional<String> getOriginalUrl(@Nonnull String shortUrl) {
         // Check if the URL is already shortened.
-        var item = urlShortnerRepository.findOriginalUrl(shortUrl);
-        return item.map(ShortenedURL::url);
+        return Optional.ofNullable(urlShortnerCachingRepository.getValue(shortUrl));
     }
 }
