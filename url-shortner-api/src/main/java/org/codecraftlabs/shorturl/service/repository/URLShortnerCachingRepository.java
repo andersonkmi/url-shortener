@@ -8,11 +8,11 @@ import redis.clients.jedis.Jedis;
 import javax.annotation.Nonnull;
 
 @Component
-public class ShortnerURLCachingRepository {
+public class URLShortnerCachingRepository {
     private final JedisConnectionFactory jedisConnectionFactory;
 
     @Autowired
-    public ShortnerURLCachingRepository(@Nonnull JedisConnectionFactory jedisConnectionFactory) {
+    public URLShortnerCachingRepository(@Nonnull JedisConnectionFactory jedisConnectionFactory) {
         this.jedisConnectionFactory = jedisConnectionFactory;
     }
 

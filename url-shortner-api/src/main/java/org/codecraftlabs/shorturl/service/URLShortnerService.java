@@ -2,7 +2,7 @@ package org.codecraftlabs.shorturl.service;
 
 import org.codecraftlabs.shorturl.service.repository.DatabaseException;
 import org.codecraftlabs.shorturl.service.repository.ShortenedURL;
-import org.codecraftlabs.shorturl.service.repository.ShortnerURLCachingRepository;
+import org.codecraftlabs.shorturl.service.repository.URLShortnerCachingRepository;
 import org.codecraftlabs.shorturl.service.repository.URLShortnerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +16,12 @@ import java.util.Optional;
 public class URLShortnerService {
     private static final Logger logger = LoggerFactory.getLogger(URLShortnerService.class);
     private final URLShortnerRepository urlShortnerRepository;
-    private final ShortnerURLCachingRepository shortnerURLCachingRepository;
+    private final URLShortnerCachingRepository urlShortnerCachingRepository;
 
     @Autowired
-    public URLShortnerService(@Nonnull URLShortnerRepository urlShortnerRepository, @Nonnull ShortnerURLCachingRepository shortnerURLCachingRepository) {
+    public URLShortnerService(@Nonnull URLShortnerRepository urlShortnerRepository, @Nonnull URLShortnerCachingRepository urlShortnerCachingRepository) {
         this.urlShortnerRepository = urlShortnerRepository;
-        this.shortnerURLCachingRepository = shortnerURLCachingRepository;
+        this.urlShortnerCachingRepository = urlShortnerCachingRepository;
     }
 
     @Nonnull
@@ -43,7 +43,7 @@ public class URLShortnerService {
             urlShortnerRepository.saveShortUrl(urlId, originalUrl, convertedValue);
 
             // Saves into the cache
-            shortnerURLCachingRepository.setValue(originalUrl, convertedValue);
+            urlShortnerCachingRepository.setValue(originalUrl, convertedValue);
 
             return convertedValue;
         } catch (DatabaseException exception) {
