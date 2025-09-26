@@ -32,19 +32,13 @@ public class URLShortnerService {
                 logger.info("URL already shortened. Returning existing item");
                 return shortUrl.get().shortUrl();
             }
-
             // Generates a short url version
-            long urlId = urlShortnerRepository.getUrlId();
-            Base62Converter converter = new Base62Converter();
-            String convertedValue = converter.toBase62(urlId);
+            var pair = generateShortUrl();
 
             // Saves the generated URL
-            urlShortnerRepository.saveShortUrl(urlId, originalUrl, convertedValue);
+            saveInDatabase(pair, originalUrl);
 
-            // Saves into the cache
-            urlShortnerCachingRepository.setValue(convertedValue, originalUrl);
-
-            return convertedValue;
+            return pair.getSecond();
         } catch (DatabaseException exception) {
             logger.error("Failed to generate a new short URL", exception);
             throw new URLShorteningException("Fail to generate short URL", exception);
@@ -55,5 +49,21 @@ public class URLShortnerService {
     public Optional<String> getOriginalUrl(@Nonnull String shortUrl) {
         // Check if the URL is already shortened.
         return Optional.ofNullable(urlShortnerCachingRepository.getValue(shortUrl));
+    }
+
+    @Nonnull
+    private Pair<Long, String> generateShortUrl() throws DatabaseException {
+        long urlId = urlShortnerRepository.getUrlId();
+        Base62Converter converter = new Base62Converter();
+        String converted = converter.toBase62(urlId);
+        return new Pair<>(urlId, converted);
+    }
+
+    private void saveInDatabase(@Nonnull Pair<Long, String> pair,
+                                @Nonnull String originalUrl) throws DatabaseException {
+        urlShortnerRepository.saveShortUrl(pair.getFirst(), originalUrl, pair.getSecond());
+
+        // TODO: need to handle failures when saving the item in the cache
+        urlShortnerCachingRepository.setValue(pair.getSecond(), originalUrl);
     }
 }
