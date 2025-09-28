@@ -36,7 +36,7 @@ public class URLShortnerService {
             var pair = generateShortUrl();
 
             // Saves the generated URL
-            saveInDatabase(pair, originalUrl);
+            save(pair, originalUrl);
 
             return pair.getSecond();
         } catch (DatabaseException exception) {
@@ -47,8 +47,24 @@ public class URLShortnerService {
 
     @Nonnull
     public Optional<String> getOriginalUrl(@Nonnull String shortUrl) {
-        // Check if the URL is already shortened.
-        return Optional.ofNullable(urlShortnerCachingRepository.getValue(shortUrl));
+        Optional<String> originalUrl = urlShortnerCachingRepository.getValue(shortUrl);
+        if (originalUrl.isPresent()) {
+            logger.info("Found key '{}' in the cache", shortUrl);
+            return originalUrl;
+        }
+
+        logger.info("Key '{}' not present in the cache. Falling back to the database", shortUrl);
+        var results = this.urlShortnerRepository.findOriginalUrl(shortUrl);
+        if (results.isEmpty()) {
+            logger.info("Key '{}' not present in the database. Nothing else to do here.", shortUrl);
+            return Optional.empty();
+        }
+
+        // Saves the value into Redis just case
+        urlShortnerCachingRepository.setValue(results.get().shortUrl(), results.get().url());
+
+        //Returns the value
+        return Optional.of(results.get().url());
     }
 
     @Nonnull
@@ -59,11 +75,9 @@ public class URLShortnerService {
         return new Pair<>(urlId, converted);
     }
 
-    private void saveInDatabase(@Nonnull Pair<Long, String> pair,
-                                @Nonnull String originalUrl) throws DatabaseException {
+    private void save(@Nonnull Pair<Long, String> pair,
+                      @Nonnull String originalUrl) throws DatabaseException {
         urlShortnerRepository.saveShortUrl(pair.getFirst(), originalUrl, pair.getSecond());
-
-        // TODO: need to handle failures when saving the item in the cache
         urlShortnerCachingRepository.setValue(pair.getSecond(), originalUrl);
     }
 }
