@@ -1,7 +1,10 @@
 package org.codecraftlabs.shorturl.service;
 
+import org.springframework.stereotype.Component;
+
 import javax.annotation.Nonnull;
 
+@Component
 class Base62Converter {
     private static final String BASE62_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int BASE = 62;

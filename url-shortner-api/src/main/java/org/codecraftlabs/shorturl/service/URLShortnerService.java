@@ -16,11 +16,15 @@ public class URLShortnerService {
     private static final Logger logger = LoggerFactory.getLogger(URLShortnerService.class);
     private final URLShortnerRepository urlShortnerRepository;
     private final URLShortnerCachingRepository urlShortnerCachingRepository;
+    private final Base62Converter base62Converter;
 
     @Autowired
-    public URLShortnerService(@Nonnull URLShortnerRepository urlShortnerRepository, @Nonnull URLShortnerCachingRepository urlShortnerCachingRepository) {
+    URLShortnerService(@Nonnull URLShortnerRepository urlShortnerRepository,
+                              @Nonnull URLShortnerCachingRepository urlShortnerCachingRepository,
+                              @Nonnull Base62Converter base62Converter) {
         this.urlShortnerRepository = urlShortnerRepository;
         this.urlShortnerCachingRepository = urlShortnerCachingRepository;
+        this.base62Converter = base62Converter;
     }
 
     @Nonnull
@@ -70,8 +74,7 @@ public class URLShortnerService {
     @Nonnull
     private Pair<Long, String> generateShortUrl() throws DatabaseException {
         long urlId = urlShortnerRepository.getUrlId();
-        Base62Converter converter = new Base62Converter();
-        String converted = converter.toBase62(urlId);
+        String converted = base62Converter.toBase62(urlId);
         return new Pair<>(urlId, converted);
     }
 
