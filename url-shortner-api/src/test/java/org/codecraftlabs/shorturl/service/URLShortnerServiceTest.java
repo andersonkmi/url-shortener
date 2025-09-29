@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
@@ -77,5 +78,20 @@ public class URLShortnerServiceTest {
                 .setValue(shortUrlCacheRepositoryArgument.capture(), originalUrlCacheRepositoryArgument.capture());
         assertThat(originalUrlCacheRepositoryArgument.getValue()).isEqualTo("http://www.test.com");
         assertThat(shortUrlCacheRepositoryArgument.getValue()).isEqualTo("TM65");
+    }
+
+    @Test
+    public void when_db_fails_is_raised_should_throw_exception() throws DatabaseException {
+        // Setup mocks
+        when(urlShortnerRepository.findShortenedUrl("http://www.test.com")).thenReturn(empty());
+        when(urlShortnerRepository.getUrlId()).thenThrow(new DatabaseException("Failed to call database"));
+
+        assertThatExceptionOfType(URLShorteningException.class)
+                .isThrownBy(() -> urlShortnerService.generateShortUrl("http://www.test.com"))
+                .withMessageContaining("Fail to generate short URL");
+
+        verify(base62Converter, never()).toBase62(anyLong());
+        verify(urlShortnerRepository, never()).saveShortUrl(anyLong(), anyString(), anyString());
+        verify(urlShortnerCachingRepository, never()).setValue(anyString(), anyString());
     }
 }
