@@ -112,4 +112,40 @@ public class URLShortnerServiceTest {
         verify(base62Converter, times(1)).toBase62(anyLong());
         verify(urlShortnerCachingRepository, never()).setValue(anyString(), anyString());
     }
+
+    @Test
+    public void when_url_in_cache_should_return() {
+        // Setup mocks
+        when(urlShortnerCachingRepository.getValue("TM65")).thenReturn(of("http://www.test.com"));
+
+        var result = urlShortnerService.getOriginalUrl("TM65");
+        assertThat(result).contains("http://www.test.com");
+
+        verify(urlShortnerRepository, never()).findOriginalUrl(anyString());
+        verify(urlShortnerCachingRepository, never()).setValue(anyString(), anyString());
+    }
+
+    @Test
+    public void when_key_not_in_cache_and_db_should_return_empty() {
+        // Setup mocks
+        when(urlShortnerCachingRepository.getValue("TM65")).thenReturn(empty());
+        when(urlShortnerRepository.findOriginalUrl("TM65")).thenReturn(empty());
+
+        var result = urlShortnerService.getOriginalUrl("TM65");
+        assertThat(result).isEmpty();
+
+        verify(urlShortnerCachingRepository, never()).setValue(anyString(), anyString());
+    }
+
+    @Test
+    public void when_key_not_in_db_only_should_return_and_inserted_in_cache() {
+        // Setup mocks
+        when(urlShortnerCachingRepository.getValue("TM65")).thenReturn(empty());
+        when(urlShortnerRepository.findOriginalUrl("TM65")).thenReturn(of(new ShortenedURL(1L, "http://www.test.com", "TM65")));
+
+        var result = urlShortnerService.getOriginalUrl("TM65");
+        assertThat(result).contains("http://www.test.com");
+
+        verify(urlShortnerCachingRepository, times(1)).setValue("TM65", "http://www.test.com");
+    }
 }
