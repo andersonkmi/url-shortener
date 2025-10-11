@@ -85,7 +85,7 @@ For local development purposes, it is possible to setup a Docker container:
 
 - Run the application in debug mdde (remote debugging):
    ```
-      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar ./url-shortner-api/build/libs/url-shortner-api-1.1.1.jar
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar ./url-shortner-api/build/libs/url-shortner-api-1.1.2.jar
    ```
 - Server will start at http://localhost:27001 and remote debugging can be configured for using port 8000.
 
