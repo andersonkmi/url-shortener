@@ -25,6 +25,8 @@ public class RedisPoolConfig {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(redisConfigurationProperties.getHost());
         config.setPort(redisConfigurationProperties.getPort());
+        config.setUsername(redisConfigurationProperties.getUserName());
+        config.setPassword(redisConfigurationProperties.getPassword());
 
         JedisClientConfiguration clientConfig = JedisClientConfiguration.builder()
                 .usePooling()

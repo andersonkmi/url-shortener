@@ -11,6 +11,8 @@ public class RedisConfigurationProperties {
     private int maxTotal;
     private int maxIdle;
     private int minIdle;
+    private String userName;
+    private String password;
 
     public String getHost() {
         return host;
@@ -50,5 +52,21 @@ public class RedisConfigurationProperties {
 
     public void setMinIdle(int minIdle) {
         this.minIdle = minIdle;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

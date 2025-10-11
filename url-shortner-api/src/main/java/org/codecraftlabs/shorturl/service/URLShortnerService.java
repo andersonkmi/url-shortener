@@ -42,7 +42,7 @@ public class URLShortnerService {
             // Saves the generated URL
             save(pair, originalUrl);
 
-            return pair.getSecond();
+            return pair.second();
         } catch (DatabaseException exception) {
             logger.error("Failed to generate a new short URL", exception);
             throw new URLShorteningException("Fail to generate short URL", exception);
@@ -80,7 +80,7 @@ public class URLShortnerService {
 
     private void save(@Nonnull Pair<Long, String> pair,
                       @Nonnull String originalUrl) throws DatabaseException {
-        urlShortnerRepository.saveShortUrl(pair.getFirst(), originalUrl, pair.getSecond());
-        urlShortnerCachingRepository.setValue(pair.getSecond(), originalUrl);
+        urlShortnerRepository.saveShortUrl(pair.first(), originalUrl, pair.second());
+        urlShortnerCachingRepository.setValue(pair.second(), originalUrl);
     }
 }
