@@ -43,7 +43,7 @@ For local development purposes, it is possible to setup a Docker container:
 
 - Run the following docker command to create the database image:
   ```
-     docker image build -t codecraftlabs/url-shortner-db:1.0.0 ./url-shortner-db/docker
+     docker image build -t codecraftlabs/url-shortner-db:1.0.0 ./url-shortner-db/docker/postgres
   ```
 
 - Create the container with the previously created image:
@@ -53,9 +53,14 @@ For local development purposes, it is possible to setup a Docker container:
 
 ## Redis setup
 
-- In order to setup Redis locally, run the following command:
+- Run the following docker command to create the Redis image
   ```
-     docker run -d --name redis-container -p 6379:6379 -p 8001:8001 -v redis-data:/data redis/redis-stack:7.4.0-v6
+     docker image build -t codecraftlabs/url-shortner-redis:1.0.0 ./url-shortner-db/docker/redis
+  ```
+
+- Create the container with the previously created image:
+  ```
+     docker container run --detach --name url-shortener-redis --publish 6379:6379 codecraftlabs/url-shortener-redis:1.0.0
   ```
 
 
